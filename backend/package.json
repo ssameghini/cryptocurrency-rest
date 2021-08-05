@@ -1,0 +1,22 @@
+{
+  "name": "cryptocurrency-rest",
+  "version": "1.0.0",
+  "description": "REST API for storing and retrieving crytocurrency values, and keeping them up to date.",
+  "scripts": {
+    "dev": "nodemon server.js"
+  },
+  "keywords": [
+    "cryptocurrency",
+    "rest",
+    "mysql"
+  ],
+  "author": "Sebastian Sameghini",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.12"
+  }
+}
