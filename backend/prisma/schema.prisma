@@ -1,0 +1,29 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Currency {
+  id                  Int     @default(autoincrement())
+  description         String  @db.VarChar(30)
+  symbol              String  @unique @db.VarChar(3)
+  currencyRates       Rate[]
+
+  @@id([id, symbol])
+  @@map(name: "currencies")
+}
+
+model Rate {
+  id          Int        @id @default(autoincrement())
+  id_currency Int
+  value       Decimal    @db.Decimal(20, 10)
+  created_at  DateTime   @db.DateTime(0)
+  currency    Currency   @relation(fields: [id_currency], references: [id])
+
+  @@index([id_currency], name: "id_currency")
+  @@map(name: "rates")
+}

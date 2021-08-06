@@ -1,117 +1,102 @@
 /* Modules */
 require('dotenv').config();
 const express = require('express');
+const { PrismaClient } = require('@prisma/client');
 
-/* Initial configuration */
+/* Initial setting */
 const port = process.env.PORT || 3000;
 const app = express();
+const prisma = new PrismaClient();
+
 app.use(express.json());
 
 /* Date converting */
-const convertDate = date => {
-    const year = date.getFullYear();
-    const month = date.getMonth() + 1;
-    const day = date.getDay();
-    const hour = date.getHours();
-    const minutes = date.getMinutes();
-    const seconds = date.getSeconds();
-    return  (`${year}-${month}-${day} ${hour}:${minutes}:${seconds}`);
+const prettifyDate = date => {
+    const dateString = date.toISOString();
+    const dateArray = dateString.split('T');
+    const time = dateArray[1].slice(0, -5);
+    return `${dateArray[0]} ${time}`;
 };
-
-const rates = [
-    {
-        id_currency: 1,
-        value: 11943,
-        createdAt: new Date('2021-08-05T20:17:24')
-    },
-    {
-        id_currency: 2,
-        value: 23456,
-        createdAt: new Date('2021-08-05T20:17:11')
-    },
-    {
-        id_currency: 3,
-        value: 32156,
-        createdAt: new Date('2021-08-05T20:13:45')
-    },
-    {
-        id_currency: 2,
-        value: 22564,
-        createdAt: new Date('2021-08-05T20:19:34')
-    },
-    {
-        id_currency: 3,
-        value: 30876,
-        createdAt: new Date('2021-08-05T20:18:21')
-    },
-    {
-        id_currency: 1,
-        value: 13536,
-        createdAt: new Date('2021-08-05T20:17:15')
-    },
-    {
-        id_currency: 2,
-        value: 24654,
-        createdAt: new Date('2021-08-05T20:20:11')
-    }
-];
-
 
 /* Routing */
 app.get('/', (req, res) => {
     res.redirect(301, '/currencies');
 });
 
-app.get('/currencies', (req, res) => {
-    res.send('This is the currencies endpoint! Bitcoin, Etherum, Cardano.');
+app.get('/currencies', async (req, res) => {
+    const currencies = await prisma.currency.findMany();
+    currencies.length > 0 ?
+        res.json(currencies) :
+        res.send(`We're sorry! We didn't find any currencies in our database yet. Feel free to populate it with POST on /currencies.`);
 });
 
-app.get('/rates', (req, res) => {
-    let lastValues = [];
-    for (let index = 1; index <= currencies.length; index++) {
-        const lastValue = rates
-            .filter(value => value.id_currency === index)
-            .sort((a, b) => b.createdAt - a.createdAt)
-            .shift();
-        lastValues.push(lastValue);
-    };
-    res.json(lastValues);
+app.get('/rates', async (req, res) => {
+    const lastRates = await prisma.rate.findMany({
+        orderBy: [
+            {
+                id_currency: 'asc',
+            },
+            {
+                created_at: 'desc',
+            },
+        ],
+        distinct: ['id_currency'],
+        take: 3, // This value should actually equal to the number of currencies listed in the DB.
+        include: {
+            currency: true
+        },
+    });
+    // Remove 'T' and miliseconds from created_at Date
+    lastRates.forEach(rate => {
+        rate.created_at = prettifyDate(rate.created_at);
+    });
+    res.json(lastRates);
 });
 
-app.get('/rates/:symbol', (req, res) => {
+app.get('/rates/:symbol', async (req, res) => {
     let symbol = req.params.symbol;
     symbol = symbol.toUpperCase();
-    const currency = currencies.find(el => el.symbol === symbol);
-    if (currency) {
-        const lastUpdate = rates
-            .filter(value => value.id_currency === currency.id)
-            .sort((a, b) => b.createdAt - a.createdAt)
-            .shift();
-        res.json(lastUpdate);
-    } else {
-        res.send('The symbol you provided does not match any of our listed currencies.');
-    }
+    // Find the currency for its ID
+    const currency = await prisma.currency.findUnique({
+        where: {
+            symbol: symbol,
+        },
+        select: {
+            id: true,
+        },
+    });
+    if (!currency) { res.send(`The symbol you provided doesn't match any of our listed currencies.`) }
+    // Find all its rates, sort them from latest to oldest, and take the first
+    const lastRate = await prisma.rate.findMany({
+        include: { currency: true },
+        where: {
+            id_currency: currency.id,
+        },
+        orderBy: { created_at: 'desc' },
+        take: 1,
+    });
+    // Remove 'T' and miliseconds from created_at Date
+    lastRate[0].created_at = prettifyDate(lastRate[0].created_at);
+    res.json(lastRate);
 });
 
-app.post('/rates', (req, res) => {
-    const valueInput = req.body;
-    if (valueInput.id_currency && valueInput.value) {
-        const currency = currencies.find(el => el.id === valueInput.id_currency);
-        !currency && res.send('Please provide a valid currency id');
-        const date = new Date();
-        valueUpdate = {
-            id_currency: valueInput.id_currency,
-            value: valueInput.value,
-            createdAt: convertDate(date), // This should only be a raw new Date(), parsed in a GET response
-            currency
-        };
-        res.json(valueUpdate);
-    } else {
-        res.status(400).send('Please provide a valid object, with id_currency and value properties.');
-    }
+app.post('/rates', async (req, res) => {
+    const { id_currency, value } = req.body;
+    // The POST request doesn't provide a created_at yet (Frontend feature)
+    const date = new Date().toISOString();
+    const createdRate = await prisma.rate.create({
+        data: {
+            id_currency,
+            value,
+            created_at: date,
+        },
+    });
+    // Remove 'T' and miliseconds from created_at Date
+    createdRate.created_at = prettifyDate(createdRate.created_at);
+    res.json(createdRate);
 });
 
 /* Serve API */
 app.listen(port, () => {
-    console.log(`The server is listening on port ${port}`)
+    console.log(`The server is listening on port ${port}`);
 });
