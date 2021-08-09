@@ -1,4 +1,4 @@
-export default function CurrenciesSection({currencies, onSelect, selected, setNewCurrency}) {
+export default function CurrenciesSection({currencies, onSelect, selected, setNewCurrency, newCurrencyAside}) {
   return(
       <section id='currencies-section' className='flex'>
         {
@@ -17,9 +17,11 @@ export default function CurrenciesSection({currencies, onSelect, selected, setNe
         }
         <button
           className={`currency-button post-button`}
-          onClick={() => {setNewCurrency(true)}}
+          onClick={() => {setNewCurrency(!newCurrencyAside)}}
           >
-          Add a new currency...
+          {newCurrencyAside ? 
+          'Update a currency value' :
+          'Add a new currency...'}
         </button>
       </section>
   )

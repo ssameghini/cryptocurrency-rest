@@ -3,8 +3,32 @@ header {
   flex-direction: row;
   align-items: center;
   justify-content: space-around;
-  /* font-size: calc(10px + 2vmin); */
   color: white;
+  gap: 1rem;
+}
+
+h1, h2 {
+  flex: 0 1 auto;
+}
+
+.multi-button {
+  width: 50%;
+}
+
+.ind {
+  background-color: #45ad05;
+  color: white;
+  font-weight: bold;
+  border-bottom-left-radius: 20%;
+  border-top-left-radius: 20%;
+}
+
+.mult {
+  background-color: blue;
+  color: white;
+  font-weight: bold;
+  border-bottom-right-radius: 20%;
+  border-top-right-radius: 20%;
 }
 
 .flex {
@@ -102,6 +126,7 @@ main {
 
 .delete {
   color: red;
+  margin-top: 3em;
 }
 
 /* Change display if with a portrait orientation or a width lower than 960px */
@@ -114,5 +139,22 @@ main {
     flex-direction: row;
     gap: unset;
     flex: 1 1 auto;
+  }
+
+  .input-bar, .aside-form {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .input-bar h3 {
+    margin: 0;
+  }
+
+  .aside-form > {
+    height: fit-content;
+  }
+
+  .delete {
+    margin-left: 70%;
   }
 }

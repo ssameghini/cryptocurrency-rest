@@ -48,8 +48,13 @@ export default function App(props) {
             onSelect={changeCurrency}
             selected={selectedCurrency}
             setNewCurrency={setNewCurrencyAside}
+            newCurrencyAside={newCurrencyAside}
             />
-            <ChartsSection symbol={selectedCurrency} update={outdated} setUpdate={setOutdated}/>
+            <ChartsSection 
+                symbol={selectedCurrency} 
+                update={outdated} 
+                setUpdate={setOutdated}
+                />
             {
                 newCurrencyAside === true ?
                 <NewCurrencyForm setUpdate={setOutdated}/> :

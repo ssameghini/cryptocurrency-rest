@@ -29,8 +29,8 @@ export default function ChartsSection({symbol, update, setUpdate}) {
   const renderLineChart = (
     <ResponsiveContainer width="80%" height="100%" className="container">
       <LineChart data={fluctuations
-        .map(rate => ({...rate, "value": +rate.value }))
-        .slice(-5)
+        .map(rate => ({...rate, "value": +rate.value })) // Set value from String to Number
+        .slice(-5) // Show only the last 5 values
         }>
         <Line type="monotone" dataKey="value" stroke={lineColor()} strokeWidth={2}/>
         <CartesianGrid stroke="#ccc" strokeDasharray="5 5"/>
