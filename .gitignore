@@ -1,2 +1,11 @@
+# Node Modules
 */node_modules/
+
+# Environmental values
 **/.env
+
+# testing
+*/coverage
+
+# production
+*/build
