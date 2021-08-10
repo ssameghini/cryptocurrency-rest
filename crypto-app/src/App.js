@@ -14,7 +14,7 @@ export default function App(props) {
     const [newCurrencyAside, setNewCurrencyAside] = useState(false);
 
     useEffect(() => {
-        axios.get('http://localhost:5000/currencies')
+        axios.get('http://localhost/currencies')
         .then(({data}) => {
             setCurrencies(data);
             setSelectedCurrency(data[0].symbol);
@@ -23,7 +23,7 @@ export default function App(props) {
 
     useEffect(() => {
         outdated &&
-        axios.get('http://localhost:5000/currencies')
+        axios.get('http://localhost/currencies')
         .then(({data}) => {
             setCurrencies(data);
         });

@@ -28,7 +28,7 @@ export default function NewCurrencyForm({setUpdate}) {
       description: currencyName,
       symbol: symbolInput,
     };
-    axios.post('http://localhost:5000/currencies', newCurrency)
+    axios.post('http://localhost/currencies', newCurrency)
       .then(({data}) => {
         console.log(data);
         setUpdate(true);

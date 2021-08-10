@@ -6,10 +6,10 @@ WORKDIR /app
 COPY /backend/package.json ./
 RUN npm install
 
-COPY /backend/* ./
+COPY /backend/ ./
 
 RUN npm run prisma && npm install pm2 -g
-ENV PM2_PUBLIC_KEY dvx73dw8z72bymf
-ENV PM2_SECRET_KEY 22gub5ylkdkneqi
+ENV PM2_PUBLIC_KEY your-public-key
+ENV PM2_SECRET_KEY your-secret-key
 
 CMD ["npm", "start"]

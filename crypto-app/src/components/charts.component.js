@@ -47,7 +47,7 @@ export default function ChartsSection({symbol, update, setUpdate}) {
   );
 
   useEffect(() => {
-    axios.get(`http://localhost:5000/rates/fluctuations/${symbol}`)
+    axios.get(`http://localhost/rates/fluctuations/${symbol}`)
       .then(({data}) => {
         setFluctuations(data);
         update && setUpdate(false);
@@ -55,7 +55,7 @@ export default function ChartsSection({symbol, update, setUpdate}) {
   }, [symbol, update, setUpdate]);
 
   useEffect(() => {
-    axios.get(`http://localhost:5000/rates/${symbol}`)
+    axios.get(`http://localhost/rates/${symbol}`)
       .then(({data}) => {
         if (data.id) {
           let description = data.currency.description;

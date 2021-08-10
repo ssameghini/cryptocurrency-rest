@@ -54,7 +54,7 @@ export default function UpdateForm({currencies, update}) {
       value: valueInput,
       created_at: date,
     };
-    axios.post('http://localhost:5000/rates', rateInput)
+    axios.post('http://localhost/rates', rateInput)
       .then(({data}) => {
         update(true);
         setCurrencyName('');
