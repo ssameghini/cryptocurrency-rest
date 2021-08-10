@@ -4,6 +4,14 @@ const cors = require('cors');
 const express = require('express');
 const { PrismaClient } = require('@prisma/client');
 
+/* Seeding the database with initial data */
+const seed = require('./seed');
+seed()
+    .catch((e) =>{
+        console.error(e);
+        process.exit(1);
+    });
+
 /* Initial setting */
 const port = process.env.PORT || 5000;
 const app = express();
