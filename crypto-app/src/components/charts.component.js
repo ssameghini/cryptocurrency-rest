@@ -12,6 +12,7 @@ import { ResponsiveContainer,
 
 export default function ChartsSection({symbol, update, setUpdate}) {
   const [fluctuations, setFluctuations] = useState([]);
+  const [lastRate, setLastRate] = useState({});
 
   const lineColor = () => {
     switch (symbol) {
@@ -27,7 +28,7 @@ export default function ChartsSection({symbol, update, setUpdate}) {
   }
   
   const renderLineChart = (
-    <ResponsiveContainer width="80%" height="100%" className="container">
+    <ResponsiveContainer width="80%" className="container">
       <LineChart data={fluctuations
         .map(rate => ({...rate, "value": +rate.value })) // Set value from String to Number
         .slice(-5) // Show only the last 5 values
@@ -52,10 +53,33 @@ export default function ChartsSection({symbol, update, setUpdate}) {
         update && setUpdate(false);
       });
   }, [symbol, update, setUpdate]);
+
+  useEffect(() => {
+    axios.get(`http://localhost:5000/rates/${symbol}`)
+      .then(({data}) => {
+        if (data.id) {
+          let description = data.currency.description;
+          description = description[0].toUpperCase() + description.slice(1, description.length);
+          setLastRate({
+            description,
+            value: data.value,
+            created_at: data.created_at,
+          })
+        }
+      })
+  }, [symbol, update]);
   
   return(
-      <section id='charts-section'>
+      <section id='charts-section'className='flex'>
         {renderLineChart}
+        { lastRate.description &&
+          <article id='last-rate'>
+            <h3 className='grid-description'>{lastRate.description}</h3>
+            <h4 className='grid-symbol'>{symbol}</h4>
+            <p className='grid-value'>Last value: <span>{lastRate.value}</span></p>
+            <p className='grid-date'>at <em>{lastRate.created_at}</em></p>
+          </article>
+        }
       </section>
   )
 }

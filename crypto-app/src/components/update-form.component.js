@@ -4,7 +4,21 @@ import { useState } from "react";
 export default function UpdateForm({currencies, update}) {
   const [currencyName, setCurrencyName] = useState('');
   const [valueInput, setValueInput] = useState(0);
+  const [createdAt, setCreatedAt] = useState('');
   const [error, setError] = useState(false);
+
+  const dateFormat = date => {
+    if (date[10] === ' ') {
+      date = date.split(' ');
+      date = date.join('T');
+    } 
+    if (date.length === 16) {
+      date += ':00.000Z'; // For proper ISO format
+    } else if (date.length === 19) {
+      date += '.000Z'; // For proper ISO format
+    }
+    return date;
+  }
 
   const changeCurrencyInput = e => {
     const { value } = e.target;
@@ -18,6 +32,13 @@ export default function UpdateForm({currencies, update}) {
     setError(false);
   }
 
+  const changeDateInput = e => {
+    const { value } = e.target;
+    console.log(value);
+    setCreatedAt(value);
+    setError(false);
+  }
+
   const postRateUpdate = e => {
     e.preventDefault();
     if (!currencyName && !valueInput) {
@@ -27,13 +48,18 @@ export default function UpdateForm({currencies, update}) {
     const currencyId = currencies.find(currency => {
       return currency.symbol === currencyName;
     }).id;
+    const date = dateFormat(createdAt);
     const rateInput = {
       id_currency: currencyId,
       value: valueInput,
+      created_at: date,
     };
     axios.post('http://localhost:5000/rates', rateInput)
       .then(({data}) => {
         update(true);
+        setCurrencyName('');
+        setValueInput(0);
+        setCreatedAt('');
       });
   }
 
@@ -88,6 +114,15 @@ export default function UpdateForm({currencies, update}) {
               onChange={changeValueInput}
               />
             <label htmlFor='select-value' className='form-label'><em>Specify a value...</em></label>
+            <input 
+              type='datetime-local' 
+              name='created_at' 
+              id='created_at'
+              placeholder='YYYY-MM-DD HH:MM(:SS)'
+              value={createdAt}
+              onChange={changeDateInput}
+              />
+            <label htmlFor='created_at' className='form-label'><em>(Optional) Date of the rate...</em></label>
             <button type='submit' className='post-button'>Update {currencyName} rate!</button>
         </form>
         <button type='button' className='post-button delete' onClick={deleteCurrency}>Or delete this currency...</button>

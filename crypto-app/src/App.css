@@ -46,7 +46,9 @@ main {
 #charts-section {
   flex: 1 1 75%;
   margin-top: 1.5rem;
-  max-height: 80vh;
+  max-height: 100%;
+  flex-direction: column;
+  justify-content: space-around;
 }
 
 .input-bar, #currencies-section {
@@ -56,8 +58,37 @@ main {
 }
 
 /* Chart container */
-.container {
-  margin: auto;
+.container, #last-rate {
+  margin: 0 auto;
+}
+
+#last-rate {
+  border: 2px solid #282c34;
+  background-color: #adad85;
+  padding: 1em;
+  display: grid;
+  grid-template: 1fr 1fr / 1fr 1fr ;
+  place-items: center;
+}
+
+.grid-description {
+  grid-area: 1 / 1 / 2 / 2;
+}
+
+.grid-symbol {
+  grid-area: 2 / 1 / 3 / 2;
+}
+
+.grid-value {
+  grid-area: 1 / 2 / 2 / 3;
+}
+
+.grid-value span {
+  text-decoration: underline;
+}
+
+.grid-date {
+  grid-area: 2 / 2 / 3 / 3;
 }
 
 /* Aside forms */
@@ -138,6 +169,10 @@ main {
   #currencies-section {
     flex-direction: row;
     gap: unset;
+    flex: 1 1 auto;
+  }
+
+  #charts-section {
     flex: 1 1 auto;
   }
 
