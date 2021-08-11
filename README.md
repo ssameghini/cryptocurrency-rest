@@ -12,7 +12,7 @@ The current repository has :
 
 - the database models scripted in `/mysql/schemas.sql`.
 
-For the application to fully run, you might need an account on [PM2](https://pm2.io/) and some keys from there to synchronize your API with the web monitor. Check the [Docs](./Docs.md) for more information on how to get that done.
+### For the application to fully run, you might need an account on [PM2](https://pm2.io/) and some keys from there to synchronize your API with the web monitor. Check the [Docs](./Docs.md) for more information on how to get that done.
 
 ---
 
@@ -43,8 +43,6 @@ Follow these steps.
 
 4. Set and run a MySQL container:
 
-<br/>
-
     ```bash
     docker run -d \
         --name crypto-mysql \
@@ -55,7 +53,7 @@ Follow these steps.
         mysql:latest
     ```
 
-    - Or if you are using PowerShell:
+    - Or if you're using PowerShell...
 
     ```powershell
     docker run -d `
@@ -102,6 +100,8 @@ Follow these steps.
         -e DATABASE_URL="mysql://root:secret@mysql/crypto_rest" \
         crypto-api
     ```
+
+    - Or if you're using PowerShell...
 
     ```powershell
     docker run -dp 80:5000 `
@@ -160,6 +160,8 @@ Follow these steps.
         docker build -t crypto-app .
     ```
 
+    - Or if you're using PowerShell...
+
     ```powershell
     cd /crypto-app `
         docker build -t crypto-app .
@@ -175,6 +177,8 @@ Follow these steps.
         -dp 3000:3000 \
         crypto-app
     ```
+
+    - Or if you're using PowerShell...
 
     ```powershell
     docker run `
