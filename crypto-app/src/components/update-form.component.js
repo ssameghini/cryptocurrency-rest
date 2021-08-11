@@ -134,7 +134,8 @@ export default function UpdateForm({currencies, update}) {
                 <li>Select one currency</li>
                 <br/>
                 <li>And if you want to <strong>update</strong> a rate...</li>
-                <li>Assign a new numerical value (up to ten decimals allowed)</li>
+                <li>Assign a new numerical value <br/>
+                (up to ten decimals allowed)</li>
               </ul>
             </>
           )
