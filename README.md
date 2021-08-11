@@ -12,7 +12,9 @@ The current repository has :
 
 - the database models scripted in `/mysql/schemas.sql`.
 
-### For the application to fully run, you might need an account on [PM2](https://pm2.io/) and some keys from there to synchronize your API with the web monitor. Check the [Docs](./Docs.md) for more information on how to get that done.
+### Prerequisites
+
+For the application to fully run, you will need an account on [PM2](https://pm2.io/) and some keys from there to synchronize your API with the web monitor. Check the [Docs](./Docs.md) for more information on how to get that done.
 
 ---
 
@@ -26,6 +28,10 @@ Follow these steps.
 1. Git clone this repo:
 
     - `$ git clone https://github.com/ssameghini/cryptocurrency-rest.git`
+    
+    OR
+    
+    - Download the [zip](https://github.com/ssameghini/cryptocurrency-rest/archive/refs/heads/main.zip) and extract it
 
 <br/>
 
@@ -75,9 +81,11 @@ Follow these steps.
 
     - **Important**
 
-    - For this command to work, you need to be on root of the project. `docker build` searches for a **Dockerfile** on that directory.
+        - For this command to work, you need to be on root of the project. `docker build` searches for a **Dockerfile** on that directory.
 
-    - You will need a [PM2](https://pm2.io/) account and keys to provide to the Dockerfile, in order for it to start properly. Check the [Docs](./Docs.md) for a guide.
+        - You will need a [PM2](https://pm2.io/) account and keys to provide to the Dockerfile, in order for it to start properly. Check the [Docs](./Docs.md) for a guide.
+    
+    - Run:
 
     - `$ docker build -t crypto-api .`
 
@@ -125,21 +133,23 @@ Follow these steps.
 
 7. Run several requests against `http://localhost` to test the API
 
-    - `http://localhost/currencies`
+    - GET `http://localhost/currencies`
 
-    - `http://localhost/rates`
+    - GET `http://localhost/rates`
 
-    - `http://localhost/rates/:symbol`
+    - GET `http://localhost/rates/:symbol`
 
-    - `http://localhost/rates` - POST `{ id_currency: number, value: number }`
+    - POST `http://localhost/rates` 
+    
+        - { id_currency: _number_, value: _number_ }
 
 > _:symbol_ is a placeholder for one of the available currencies in the database. By default, these include:
 
-    - 'BTC': bitcoin
+    - 'btc': bitcoin
 
-    - 'ETH': etherum
+    - 'eth': etherum
 
-    - 'ADA': cardano
+    - 'ada': cardano
 
 > The client provides more functionality regarding getting and posting information...
 
